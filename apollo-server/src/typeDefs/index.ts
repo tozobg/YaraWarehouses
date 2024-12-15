@@ -6,6 +6,7 @@ import { warehouseProductQuery } from "./queries/warehouseProductQuery";
 import { warehouseProductType } from "./types";
 import { warehouseProductMovementQuery } from "./queries/warehouseProductMovementQuery";
 import { warehouseProductMovementType } from "./types";
+import { productMutation } from "./mutations";
 
 const typeDefs = [
   [
@@ -13,6 +14,8 @@ const typeDefs = [
     warehouseQuery,
     warehouseProductQuery,
     warehouseProductMovementQuery,
+  ],[
+    productMutation
   ],
   [
     productType,
