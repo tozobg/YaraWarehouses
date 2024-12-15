@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+import { gql } from "apollo-server";
 
 const bookType = gql`
   type Book {
@@ -7,6 +7,4 @@ const bookType = gql`
   }
 `;
 
-module.exports = {
-  bookType,
-};
+export { bookType };
