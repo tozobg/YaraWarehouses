@@ -1,4 +1,5 @@
-import { bookQuery } from "./bookQuery";
+import { productQuery } from "./productQuery";
+import { warehouseProductQuery } from "./warehouseProductQuery";
 import { warehouseQuery } from "./warehouseQuery";
 
-export { bookQuery, warehouseQuery };
+export { productQuery, warehouseQuery, warehouseProductQuery };

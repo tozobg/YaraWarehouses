@@ -60,7 +60,6 @@ const resolvers = {
         //   num1: 1,
         //   num2: 2,
         // });
-
         // console.log("da response", response.data);
       } catch (error) {
         console.error(error);
@@ -75,7 +74,7 @@ const resolvers = {
       return [];
     },
     // Fetch a single product by ID
-    product: async (_: any, { id }: { id: string }): Promise<any> => {
+    product: async (_: any, { id }:{ id: string }): Promise<any> => {
       console.log("Called");
       const result = await pool.query("SELECT * FROM products WHERE id = $1", [
         id,

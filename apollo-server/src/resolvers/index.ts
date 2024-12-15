@@ -1,7 +1,11 @@
-import { booksResolvers } from "./booksResolvers";
+import { productsResolvers } from "./productsResolvers";
+import { warehouseProductResolvers } from "./warehouseProductResolvers";
 import { warehousesResolvers } from "./warehousesResolvers";
 
-//const resolvers = [booksResolvers];
-const resolvers = [booksResolvers, warehousesResolvers];
+const resolvers = [
+  productsResolvers,
+  warehousesResolvers,
+  warehouseProductResolvers,
+];
 
 export { resolvers };

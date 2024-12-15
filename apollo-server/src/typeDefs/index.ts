@@ -1,18 +1,13 @@
-import { bookQuery } from "./queries/bookQuery";
-import { bookType } from "./types";
+import { productQuery } from "./queries/productQuery";
+import { productType } from "./types";
 import { warehouseQuery } from "./queries/warehouseQuery";
 import { warehousesType } from "./types";
+import { warehouseProductQuery } from "./queries/warehouseProductQuery";
+import { warehouseProductType } from "./types";
 
-// const typeDefs = [bookQuery, bookType];
-
-const typeDefs = [ 
-  [bookQuery, warehouseQuery],
-  [ bookType, warehousesType]
+const typeDefs = [
+  [productQuery, warehouseQuery, warehouseProductQuery],
+  [productType, warehousesType, warehouseProductType],
 ];
-
-// const typeDefs = [
-//   { ...bookQuery, ...warehouseQuery },
-//   { ...bookType, ...warehousesType },
-// ];
 
 export { typeDefs };

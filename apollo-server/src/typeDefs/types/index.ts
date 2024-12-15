@@ -1,4 +1,5 @@
-import { bookType } from "./bookType";
+import { productType } from "./productType";
+import { warehouseProductType } from "./warehouseProductType";
 import { warehousesType } from "./warehouseType";
 
-export { bookType, warehousesType };
+export { productType, warehousesType, warehouseProductType };

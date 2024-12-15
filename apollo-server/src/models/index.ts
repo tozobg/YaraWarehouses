@@ -1,4 +1,5 @@
-import { Book } from "./Book";
+import { Product } from "./Product";
 import { Warehouse } from "./Warehouse";
+import { WarehouseProduct } from "./WarehouseProduct";
 
-export { Book, Warehouse };
+export { Product, Warehouse, WarehouseProduct };

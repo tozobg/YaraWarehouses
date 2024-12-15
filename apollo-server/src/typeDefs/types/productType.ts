@@ -1,7 +1,7 @@
 import { gql } from "apollo-server";
 
-const warehousesType = gql`
-  type Warehouse {
+const productType = gql`
+  type Product {
     id: String!
     name: String!
     size: Int!
@@ -9,4 +9,4 @@ const warehousesType = gql`
   }
 `;
 
-export { warehousesType };
+export { productType };

@@ -1,15 +1,15 @@
 import { pgClient } from "../data";
 
-class Warehouse {
+class WarehouseProduct {
   static async all() {
-    const result = await pgClient.query("SELECT * FROM warehouses");
+    const result = await pgClient.query("SELECT * FROM warehouse_products");
 
     return result.rows;
   }
 
   static async getById(id: string) {
     const result = await pgClient.query(
-      "SELECT * FROM warehouses where id=$1",
+      "SELECT * FROM warehouse_products where id=$1",
       [id]
     );
 
@@ -17,4 +17,4 @@ class Warehouse {
   }
 }
 
-export { Warehouse };
+export { WarehouseProduct };
