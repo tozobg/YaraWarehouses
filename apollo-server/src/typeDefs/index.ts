@@ -1,12 +1,16 @@
-import { productQuery } from "./queries/productQuery";
-import { productType } from "./types";
-import { warehouseQuery } from "./queries/warehouseQuery";
-import { warehousesType } from "./types";
-import { warehouseProductQuery } from "./queries/warehouseProductQuery";
-import { warehouseProductType } from "./types";
-import { warehouseProductMovementQuery } from "./queries/warehouseProductMovementQuery";
-import { warehouseProductMovementType } from "./types";
-import { productMutation } from "./mutations";
+import {
+  productQuery,
+  warehouseQuery,
+  warehouseProductQuery,
+  warehouseProductMovementQuery,
+} from "./queries";
+import {
+  warehouseProductMovementType,
+  warehouseProductType,
+  warehousesType,
+  productType,
+} from "./types";
+import { productMutation, warehouseMutation } from "./mutations";
 
 const typeDefs = [
   [
@@ -14,9 +18,8 @@ const typeDefs = [
     warehouseQuery,
     warehouseProductQuery,
     warehouseProductMovementQuery,
-  ],[
-    productMutation
   ],
+  [productMutation, warehouseMutation],
   [
     productType,
     warehousesType,
