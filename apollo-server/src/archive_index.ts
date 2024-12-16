@@ -56,7 +56,7 @@ const resolvers = {
     products: async (): Promise<any[]> => {
       console.log("Called");
       try {
-        // const response = await axios.post("http://calc-service:3000/calcOne", {
+        // const response = await axios.post("http://calc-service:3000/checkAvailability", {
         //   num1: 1,
         //   num2: 2,
         // });
@@ -74,7 +74,7 @@ const resolvers = {
       return [];
     },
     // Fetch a single product by ID
-    product: async (_: any, { id }:{ id: string }): Promise<any> => {
+    product: async (_: any, { id }: { id: string }): Promise<any> => {
       console.log("Called");
       const result = await pool.query("SELECT * FROM products WHERE id = $1", [
         id,

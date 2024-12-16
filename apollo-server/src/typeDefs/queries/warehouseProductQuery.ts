@@ -2,8 +2,9 @@ import { gql } from "apollo-server";
 
 const warehouseProductQuery = gql`
   type Query {
-    warehouseProducts: [WarehouseProduct]
+    warehousesProducts: [WarehouseProduct]
     warehouseProduct(id: String): WarehouseProduct
+    warehouseProducts(idWarehouse: String): [WarehouseProduct]
   }
 `;
 

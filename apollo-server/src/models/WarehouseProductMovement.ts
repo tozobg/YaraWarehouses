@@ -32,15 +32,17 @@ class WarehouseProductMovement {
     idProduct,
     amount,
     date,
+    is_future,
   }: {
     idWarehouse: string;
     idProduct: string;
     amount: number;
     date: string;
+    is_future: boolean;
   }) {
     const result = await pgClient.query(
-      "Insert into warehouse_products_movements (id_warehouse, id_product, movement_type, amount, date) values ($1, $2, 'import', $3, $4) RETURNING *",
-      [idWarehouse, idProduct, amount, date]
+      "Insert into warehouse_products_movements (id_warehouse, id_product, movement_type, amount, date, is_future) values ($1, $2, 'import', $3, $4, $5) RETURNING *",
+      [idWarehouse, idProduct, amount, date, is_future]
     );
 
     return result.rows[0];

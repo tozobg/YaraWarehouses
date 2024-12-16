@@ -1,40 +1,41 @@
-// Simple Express service with two endpoints in TypeScript
-import express, { Request, Response } from 'express';
+import express, { Request, Response } from "express";
+import { WarehouseEntity } from "./entities/WarehouseEntity";
+import { ProductEntity } from "./entities/ProductEntity";
+import { WarehouseProductSizeEntity } from "./entities/WarehouseProductSizeEntity";
 
 const app = express();
 const PORT = 3000;
 
-// Middleware to parse JSON requests
 app.use(express.json());
 
 type CalcRequest = {
-    num1: number;
-    num2: number;
+  warehouse: WarehouseEntity;
+  product: ProductEntity;
+  amount: number;
+  warehouseProductsSizes: WarehouseProductSizeEntity[];
 };
 
 // CalcOne endpoint
-app.post('/calcOne', (req: Request, res: Response) => {
-    const { num1, num2 }: CalcRequest = req.body;
-    if (typeof num1 === 'number' && typeof num2 === 'number') {
-        const result = num1 + num2;
-        res.json({ result });
-    } else {
-        res.status(400).json({ error: 'Invalid input. Please provide two numbers.' });
-    }
-});
+app.post("/checkAvailability", (req: Request, res: Response) => {
+  const { warehouse, product, amount, warehouseProductsSizes }: CalcRequest =
+    req.body;
 
-// CalcTwo endpoint
-app.post('/calcTwo', (req: Request, res: Response) => {
-    const { num1, num2 }: CalcRequest = req.body;
-    if (typeof num1 === 'number' && typeof num2 === 'number') {
-        const result = num1 * num2;
-        res.json({ result });
-    } else {
-        res.status(400).json({ error: 'Invalid input. Please provide two numbers.' });
-    }
+  // Calculate size taken by ALL products
+  const takenSize = warehouseProductsSizes.reduce(
+    (total, product) => total + product.full_size,
+    0
+  );
+
+  // Add the size of the product
+  const totalSize = takenSize + product.size * amount;
+
+  // Compare availability
+  const isAvailable = totalSize <= warehouse.size;
+
+  res.json({ isAvailable: isAvailable });
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

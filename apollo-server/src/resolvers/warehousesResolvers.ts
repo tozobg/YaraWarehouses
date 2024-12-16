@@ -18,7 +18,6 @@ const warehousesResolvers = {
       }: {
         name: string;
         size: number;
-        isHazardous: boolean;
       }
     ) => {
       return await Warehouse.add({ name, size });
