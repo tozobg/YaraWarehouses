@@ -26,6 +26,25 @@ class WarehouseProductMovement {
 
     return result.rows[0];
   }
+
+  static async import({
+    idWarehouse,
+    idProduct,
+    amount,
+    date,
+  }: {
+    idWarehouse: string;
+    idProduct: string;
+    amount: number;
+    date: string;
+  }) {
+    const result = await pgClient.query(
+      "Insert into warehouse_products_movements (id_warehouse, id_product, movement_type, amount, date) values ($1, $2, 'import', $3, $4) RETURNING *",
+      [idWarehouse, idProduct, amount, date]
+    );
+
+    return result.rows[0];
+  }
 }
 
 export { WarehouseProductMovement };

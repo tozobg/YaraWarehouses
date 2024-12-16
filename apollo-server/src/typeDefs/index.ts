@@ -10,7 +10,11 @@ import {
   warehousesType,
   productType,
 } from "./types";
-import { productMutation, warehouseMutation } from "./mutations";
+import {
+  productMutation,
+  warehouseMutation,
+  warehouseProductMovementMutation,
+} from "./mutations";
 
 const typeDefs = [
   [
@@ -19,7 +23,7 @@ const typeDefs = [
     warehouseProductQuery,
     warehouseProductMovementQuery,
   ],
-  [productMutation, warehouseMutation],
+  [productMutation, warehouseMutation, warehouseProductMovementMutation],
   [
     productType,
     warehousesType,
