@@ -16,7 +16,7 @@ class CalcService {
     warehouseProductsSizes: WarehouseProductSizeEntity;
   }) {
     const response = await axios.post(
-      "http://calc-service:3000/checkAvailability",
+      "http://calc-service:3001/checkAvailability",
       {
         warehouse: warehouse,
         product: product,

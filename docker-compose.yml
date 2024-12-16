@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: calc-service
     ports:
-      - "3000:3000"
+      - "3001:3001"
     networks:
       - local-net
       

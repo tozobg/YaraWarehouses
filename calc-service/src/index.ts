@@ -4,7 +4,7 @@ import { ProductEntity } from "./entities/ProductEntity";
 import { WarehouseProductSizeEntity } from "./entities/WarehouseProductSizeEntity";
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(express.json());
 
