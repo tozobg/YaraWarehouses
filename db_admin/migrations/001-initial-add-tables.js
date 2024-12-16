@@ -12,8 +12,9 @@ exports.up = (pgm) => {
       type: "boolean",
       notNull: false,
       default: null,
-      Comment: "NULL value if warehouse empty",
+      comment: "NULL value if warehouse empty",
     }, // NULL value if warehouse is empty
+    last_date_empty: { type: "timestamp", notNull: true, default: pgm.func("now()") },
   });
 
   // Create the products table
@@ -50,7 +51,7 @@ exports.up = (pgm) => {
     amount: { type: "integer", notNull: true, check: "amount > 0" },
   });
 
-  // Create the warehouse_products table
+  // Create the warehouse_products_movements table
   pgm.createTable("warehouse_products_movements", {
     id: {
       type: "uuid",
@@ -76,6 +77,10 @@ exports.up = (pgm) => {
     },
     amount: { type: "integer", notNull: true, check: "amount > 0" },
     date: { type: "timestamp", notNull: true, default: pgm.func("now()") },
+    is_future: {
+      type: "boolean",
+      notNull: true,
+    },
   });
 };
 
