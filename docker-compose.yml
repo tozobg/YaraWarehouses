@@ -1,5 +1,15 @@
 version: "3"
 services:
+  apollo-server:
+    build:
+      context: ./apollo-server
+      dockerfile: Dockerfile
+    container_name: apollo-server
+    ports:
+      - "4000:4000"
+    networks:
+      - local-net
+
   postgres:
     image: postgres:latest
     container_name: postgres
