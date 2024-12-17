@@ -1,5 +1,5 @@
 // lib/queries.ts
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_PRODUCTS = gql`
   query Products {
@@ -7,6 +7,15 @@ export const GET_PRODUCTS = gql`
       id
       size
       is_hazardous
+      name
+    }
+  }
+`;
+
+export const GET_WAREHOUSES = gql`
+  query Warehouses {
+    warehouses {
+      id
       name
     }
   }
