@@ -2,6 +2,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import {
+  GET_PRODUCTS,
   GET_WAREHOUSE_PRODUCTS_FULL_SIZE,
   GET_WAREHOUSE_PRODUCTS_MOVEMENTS,
   GET_WAREHOUSES,
@@ -12,6 +13,11 @@ import { IMPORT_PRODUCTS } from "../../lib/mutations";
 export default function WarehousePage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<string>("");
 
+  const {
+    loading: loadingProducts,
+    error: errorProducts,
+    data: products,
+  } = useQuery(GET_PRODUCTS);
   const {
     loading: loadingWarehouses,
     error: errorWarehouses,
@@ -78,7 +84,7 @@ export default function WarehousePage() {
 
     const data = Object.fromEntries(formData.entries());
 
-    const res = await mutateImportProduct({
+    await mutateImportProduct({
       variables: {
         ...data,
         amount: Number(data.amount),
@@ -108,7 +114,7 @@ export default function WarehousePage() {
             <option key={warehouse.id} value={warehouse.id}>
               {warehouse.name}
             </option>
-          )) || "Product list empty"}
+          )) || "Warehouse list empty"}
         </select>
         <br />
         <br />
@@ -185,12 +191,31 @@ export default function WarehousePage() {
         <label>Import a product:</label>
         <br />
         <form onSubmit={handleImportSubmit}>
-          <label htmlFor="idWarehouse">Id warehouse:</label>
-          <input type="text" id="idWarehouse" name="idWarehouse" required />
+          <label htmlFor="idWarehouse">Choose warehouse:</label>
+          <select id="idWarehouse" name="idWarehouse" defaultValue="" required>
+            <option value="" disabled>
+              Select a warehouse:
+            </option>
+            {warehouses?.warehouses?.map((warehouse: any) => (
+              <option key={warehouse.id} value={warehouse.id}>
+                {warehouse.name}
+              </option>
+            )) || "Warehouse list empty"}
+          </select>
           <br />
 
           <label htmlFor="isHazardous">Id product:</label>
-          <input type="text" id="idProduct" name="idProduct" />
+          {/* <input type="text" id="idProduct" name="idProduct" /> */}
+          <select id="idProduct" name="idProduct" defaultValue="" required>
+            <option value="" disabled>
+              Select a product:
+            </option>
+            {products?.products?.map((product: any) => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            )) || "Product list empty"}
+          </select>
           <br />
 
           <label htmlFor="amount">Amount:</label>
@@ -203,6 +228,7 @@ export default function WarehousePage() {
 
           <button type="submit">Submit</button>
         </form>
+        <br />
       </div>
     </div>
   );
