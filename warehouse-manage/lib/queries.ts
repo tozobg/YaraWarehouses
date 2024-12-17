@@ -31,3 +31,17 @@ export const GET_WAREHOUSE_PRODUCTS = gql`
     }
   }
 `;
+
+export const GET_WAREHOUSE_PRODUCTS_MOVEMENTS = gql`
+  query Query($idWarehouse: String) {
+    warehouseProductsMovements(idWarehouse: $idWarehouse) {
+      id
+      id_warehouse
+      id_product
+      amount
+      movement_type
+      date
+      is_future
+    }
+  }
+`;

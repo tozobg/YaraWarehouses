@@ -1,11 +1,16 @@
 // pages/about.tsx
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import { GET_WAREHOUSE_PRODUCTS, GET_WAREHOUSES } from "../../lib/queries";
+import {
+  GET_WAREHOUSE_PRODUCTS,
+  GET_WAREHOUSE_PRODUCTS_MOVEMENTS,
+  GET_WAREHOUSES,
+} from "../../lib/queries";
 import { useState } from "react";
 
 export default function WarehousePage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<string>("");
+
   const {
     loading: loadingWarehouses,
     error: errorWarehouses,
@@ -15,27 +20,33 @@ export default function WarehousePage() {
     loading: loadingWarehouseProducts,
     error: errorWarehouseProducts,
     data: warehouseProducts,
-    refetch,
+    refetch: refetchWarehouseProducts,
   } = useQuery(GET_WAREHOUSE_PRODUCTS, {
     variables: { idWarehouse: selectedWarehouse },
   });
+  const {
+    loading: loadingWarehouseProductsMovements,
+    error: errorWarehouseProductsMovements,
+    data: warehouseProductsMovements,
+    refetch: refetchWarehouseProductsMovements,
+  } = useQuery(GET_WAREHOUSE_PRODUCTS_MOVEMENTS, {
+    variables: { idWarehouse: selectedWarehouse },
+  });
 
-  const handleWarehouseChange = (
+  const handleWarehouseChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     const warehouseId = event.target.value;
     setSelectedWarehouse(warehouseId);
 
-    refetch();
+    refetchWarehouseProducts();
+    refetchWarehouseProductsMovements();
   };
-
-  console.log("warehouseProducts:", warehouseProducts);
 
   return (
     <div className="container">
       <h1>Warehouse Products management </h1>
       <Link href="/">Back to Product List</Link>
-
       <div>
         <label>Choose a warehouse:</label>
         <select
@@ -57,6 +68,7 @@ export default function WarehousePage() {
         <br />
         <br />
 
+        <label>Warehouse products:</label>
         {!loadingWarehouseProducts && !errorWarehouseProducts && (
           <table cellSpacing={20}>
             <thead>
@@ -79,6 +91,42 @@ export default function WarehousePage() {
             </tbody>
           </table>
         )}
+      </div>
+      <div>
+        <label>Warehouse products movements:</label>
+        {!loadingWarehouseProductsMovements &&
+          !errorWarehouseProductsMovements && (
+            <table cellSpacing={20}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Id warehouse</th>
+                  <th>Id product</th>
+                  <th>Product amount</th>
+                  <th>Movement type</th>
+                  <th>Date</th>
+                  <th>Is future</th>
+                </tr>
+              </thead>
+              <tbody>
+                {warehouseProductsMovements?.warehouseProductsMovements?.map(
+                  (movement: any) => (
+                    <tr key={movement.id}>
+                      <td>{movement.id}</td>
+                      <td>{movement.id_warehouse}</td>
+                      <td>{movement.id_product}</td>
+                      <td>{movement.amount}</td>
+                      <td>{movement.movement_type}</td>
+                      <td>
+                        {new Date(Math.floor(movement.date)).toLocaleString()}
+                      </td>
+                      <td>{movement.is_future}</td>
+                    </tr>
+                  )
+                ) || "Warehouse empty"}
+              </tbody>
+            </table>
+          )}
       </div>
     </div>
   );
