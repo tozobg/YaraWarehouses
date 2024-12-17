@@ -1,5 +1,15 @@
 version: "3"
 services:
+  warehouse-manage:
+    build:
+      context: ./warehouse-manage
+      dockerfile: Dockerfile
+    container_name: warehouse-manage
+    ports:
+      - "3000:3000"
+    networks:
+      - local-net
+
   calc-service:
     build:
       context: ./calc-service
@@ -9,7 +19,7 @@ services:
       - "3001:3001"
     networks:
       - local-net
-      
+
   apollo-server:
     build:
       context: ./apollo-server
