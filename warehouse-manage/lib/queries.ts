@@ -17,6 +17,7 @@ export const GET_WAREHOUSES = gql`
     warehouses {
       id
       name
+      size
     }
   }
 `;
@@ -28,6 +29,17 @@ export const GET_WAREHOUSE_PRODUCTS = gql`
       id_warehouse
       id_product
       amount
+    }
+  }
+`;
+
+export const GET_WAREHOUSE_PRODUCTS_FULL_SIZE = gql`
+  query Query($idWarehouse: String) {
+    allForWarehouseFullSizes(idWarehouse: $idWarehouse) {
+      name
+      amount
+      full_size
+      is_hazardous
     }
   }
 `;

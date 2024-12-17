@@ -115,6 +115,7 @@ query Warehouses($warehouseId: String) {
 - **warehousesProducts()**: Gets all warehouses products
 - **warehouseProduct(id: $warehouseProductId)**: Gets a specific warehouse product by id
 - **warehouseProducts(idWarehouse: $idWarehouse)**: Gets all products for a specific warehouse by id
+- **allForWarehouseFullSizes(idWarehouse: $idWarehouse)**: Gets all products with name and full size for a specific warehouse by id
 
 ```
 query WarehousesProducts($warehouseProductId: String, $idWarehouse: String) {
@@ -135,6 +136,12 @@ query WarehousesProducts($warehouseProductId: String, $idWarehouse: String) {
     id_warehouse
     id_product
     amount
+  }
+  allForWarehouseFullSizes(idWarehouse: $idWarehouse) {
+    name
+    amount
+    full_size
+    is_hazardous
   }
 }
 ```

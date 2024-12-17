@@ -5,6 +5,7 @@ const warehouseProductQuery = gql`
     warehousesProducts: [WarehouseProduct]
     warehouseProduct(id: String): WarehouseProduct
     warehouseProducts(idWarehouse: String): [WarehouseProduct]
+    allForWarehouseFullSizes(idWarehouse: String): [WarehouseProductFullSize]
   }
 `;
 

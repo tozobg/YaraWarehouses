@@ -2,7 +2,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import {
-  GET_WAREHOUSE_PRODUCTS,
+  GET_WAREHOUSE_PRODUCTS_FULL_SIZE,
   GET_WAREHOUSE_PRODUCTS_MOVEMENTS,
   GET_WAREHOUSES,
 } from "../../lib/queries";
@@ -22,7 +22,7 @@ export default function WarehousePage() {
     error: errorWarehouseProducts,
     data: warehouseProducts,
     refetch: refetchWarehouseProducts,
-  } = useQuery(GET_WAREHOUSE_PRODUCTS, {
+  } = useQuery(GET_WAREHOUSE_PRODUCTS_FULL_SIZE, {
     variables: { idWarehouse: selectedWarehouse },
   });
   const {
@@ -38,7 +38,10 @@ export default function WarehousePage() {
     mutateImportProduct,
     { data: dataCreate, loading: loadingCreate, error: errorCreate },
   ] = useMutation(IMPORT_PRODUCTS, {
-    refetchQueries: [GET_WAREHOUSE_PRODUCTS_MOVEMENTS, GET_WAREHOUSE_PRODUCTS],
+    refetchQueries: [
+      GET_WAREHOUSE_PRODUCTS_MOVEMENTS,
+      GET_WAREHOUSE_PRODUCTS_FULL_SIZE,
+    ],
   });
 
   const handleWarehouseChange = async (
@@ -47,9 +50,24 @@ export default function WarehousePage() {
     const warehouseId = event.target.value;
     setSelectedWarehouse(warehouseId);
 
-    refetchWarehouseProducts();
-    refetchWarehouseProductsMovements();
+    await refetchWarehouseProducts();
+    await refetchWarehouseProductsMovements();
   };
+
+  let takenSize = 0;
+  let warehouseSize = 0;
+
+  if (!loadingWarehouseProducts && warehouseProducts) {
+    takenSize = warehouseProducts.allForWarehouseFullSizes.reduce(
+      (total: number, product: any) => total + product.full_size,
+      0
+    );
+
+    warehouseSize = warehouses.warehouses.find(
+      (wh: { id: string; name: string; size: number }) =>
+        wh.id === selectedWarehouse
+    ).size;
+  }
 
   const handleImportSubmit: FormEventHandler<HTMLFormElement> = async (
     params
@@ -84,7 +102,7 @@ export default function WarehousePage() {
           value={selectedWarehouse}
         >
           <option value="" disabled>
-            Select a warehouse
+            Select a warehouse:
           </option>
           {warehouses?.warehouses?.map((warehouse: any) => (
             <option key={warehouse.id} value={warehouse.id}>
@@ -95,26 +113,34 @@ export default function WarehousePage() {
         <br />
         <br />
 
+        <div>Warehouse space: {warehouseSize}</div>
+        <div>Warehouse space taken: {takenSize}</div>
+        <div>Warehouse space left: {warehouseSize - takenSize}</div>
+        <br />
+        <br />
+
         <label>Warehouse products:</label>
         {!loadingWarehouseProducts && !errorWarehouseProducts && (
           <table cellSpacing={20}>
             <thead>
               <tr>
-                <th>Id</th>
-                <th>Id warehouse</th>
-                <th>Id product</th>
-                <th>Product amount</th>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Full size</th>
+                <th>Is hazardous</th>
               </tr>
             </thead>
             <tbody>
-              {warehouseProducts?.warehouseProducts?.map((product: any) => (
-                <tr key={product.id}>
-                  <td>{product.id}</td>
-                  <td>{product.id_warehouse}</td>
-                  <td>{product.id_product}</td>
-                  <td>{product.amount}</td>
-                </tr>
-              )) || "Warehouse empty"}
+              {warehouseProducts?.allForWarehouseFullSizes?.map(
+                (product: any) => (
+                  <tr key={product.name}>
+                    <td>{product.name}</td>
+                    <td>{product.amount}</td>
+                    <td>{product.full_size}</td>
+                    <td>{product.is_hazardous.toString()}</td>
+                  </tr>
+                )
+              ) || "Warehouse empty"}
             </tbody>
           </table>
         )}

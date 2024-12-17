@@ -17,6 +17,13 @@ const warehouseProductResolvers = {
     ) => {
       return await WarehouseProduct.allForWarehouseId(idWarehouse);
     },
+    // Get all products with sizes for a warehouse by id
+    allForWarehouseFullSizes: async (
+      _: any,
+      { idWarehouse }: { idWarehouse: string }
+    ) => {
+      return await WarehouseProduct.allForWarehouseFullSizes(idWarehouse);
+    },
   },
 };
 

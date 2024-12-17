@@ -7,6 +7,12 @@ const warehouseProductType = gql`
     id_product: String
     amount: Int
   }
+  type WarehouseProductFullSize {
+    name: String
+    amount: String
+    full_size: Int
+    is_hazardous: Boolean
+  }
 `;
 
 export { warehouseProductType };
