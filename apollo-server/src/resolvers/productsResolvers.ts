@@ -1,4 +1,5 @@
 import { Product } from "../models";
+import { ApolloError } from "apollo-server";
 
 const productsResolvers = {
   Query: {
@@ -25,7 +26,11 @@ const productsResolvers = {
         isHazardous: boolean;
       }
     ) => {
-      return await Product.add({ name, size, isHazardous });
+      try {
+        return await Product.add({ name, size, isHazardous });
+      } catch (error:any) {
+        throw new ApolloError(error.message, "BUSINESS_RULE_VIOLATION");
+      }
     },
   },
 };
