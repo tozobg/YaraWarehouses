@@ -86,7 +86,7 @@ const warehouseProductMovementResolvers = {
       });
 
       // Add product amount, Change warehouse hazardness, Add product movement import
-      if (availability) {
+      if (availability.data.isAvailable) {
         await WarehouseProduct.addAmount(idWarehouse, idProduct, amount);
 
         await Warehouse.changeHazardness(idWarehouse, product.is_hazardous);

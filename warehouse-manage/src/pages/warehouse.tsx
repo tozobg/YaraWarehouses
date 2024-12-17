@@ -1,12 +1,13 @@
 // pages/about.tsx
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import {
   GET_WAREHOUSE_PRODUCTS,
   GET_WAREHOUSE_PRODUCTS_MOVEMENTS,
   GET_WAREHOUSES,
 } from "../../lib/queries";
-import { useState } from "react";
+import { FormEventHandler, useState } from "react";
+import { IMPORT_PRODUCTS } from "../../lib/mutations";
 
 export default function WarehousePage() {
   const [selectedWarehouse, setSelectedWarehouse] = useState<string>("");
@@ -33,6 +34,13 @@ export default function WarehousePage() {
     variables: { idWarehouse: selectedWarehouse },
   });
 
+  const [
+    mutateImportProduct,
+    { data: dataCreate, loading: loadingCreate, error: errorCreate },
+  ] = useMutation(IMPORT_PRODUCTS, {
+    refetchQueries: [GET_WAREHOUSE_PRODUCTS_MOVEMENTS, GET_WAREHOUSE_PRODUCTS],
+  });
+
   const handleWarehouseChange = async (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -41,6 +49,25 @@ export default function WarehousePage() {
 
     refetchWarehouseProducts();
     refetchWarehouseProductsMovements();
+  };
+
+  const handleImportSubmit: FormEventHandler<HTMLFormElement> = async (
+    params
+  ) => {
+    params.preventDefault();
+
+    const formData = new FormData(params.target as HTMLFormElement);
+
+    const data = Object.fromEntries(formData.entries());
+
+    const res = await mutateImportProduct({
+      variables: {
+        ...data,
+        amount: Number(data.amount),
+      },
+    });
+
+    (params.target as HTMLFormElement).reset();
   };
 
   return (
@@ -117,16 +144,39 @@ export default function WarehousePage() {
                       <td>{movement.id_product}</td>
                       <td>{movement.amount}</td>
                       <td>{movement.movement_type}</td>
-                      <td>
-                        {new Date(Math.floor(movement.date)).toLocaleString()}
-                      </td>
-                      <td>{movement.is_future}</td>
+                      <td>{new Date(Math.floor(movement.date)).toString()}</td>
+                      <td>{movement.is_future.toString()}</td>
                     </tr>
                   )
                 ) || "Warehouse empty"}
               </tbody>
             </table>
           )}
+        <br />
+      </div>
+      <div>
+        <br />
+        <label>Import a product:</label>
+        <br />
+        <form onSubmit={handleImportSubmit}>
+          <label htmlFor="idWarehouse">Id warehouse:</label>
+          <input type="text" id="idWarehouse" name="idWarehouse" required />
+          <br />
+
+          <label htmlFor="isHazardous">Id product:</label>
+          <input type="text" id="idProduct" name="idProduct" />
+          <br />
+
+          <label htmlFor="amount">Amount:</label>
+          <input type="number" id="amount" name="amount" required />
+          <br />
+
+          <label htmlFor="date">Date (yyyy-mm-dd):</label>
+          <input type="text" id="date" name="date" required />
+          <br />
+
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </div>
   );
