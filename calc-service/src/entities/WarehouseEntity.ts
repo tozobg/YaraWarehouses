@@ -1,8 +1,8 @@
 export class WarehouseEntity {
   id!: string; // UUID
   name!: string;
-  size!: number; // Must be > 0
-  is_hazardous!: boolean | null; // Nullable, default: null
+  size!: number;
+  is_hazardous!: boolean | null; // Nullable
   last_date_empty!: Date;
 
   constructor(init: Partial<WarehouseEntity>) {

@@ -1,42 +1,49 @@
 import { pgClient } from "../data";
 
 class WarehouseProduct {
+  // Get all warehouses and all products
   static async all() {
     const result = await pgClient.query("SELECT * FROM warehouse_products");
 
     return result.rows;
   }
 
+  // Get a single warehouse product by id
   static async getById(id: string) {
     const result = await pgClient.query(
-      "SELECT * FROM warehouse_products where id=$1",
+      "SELECT * FROM warehouse_products WHERE id=$1",
       [id]
     );
 
     return result.rows[0];
   }
 
+  // Get all products for a SINGLE warehouse by id
   static async allForWarehouseId(idWarehouse: string) {
     const result = await pgClient.query(
-      "SELECT * FROM warehouse_products where id_warehouse = $1",
+      "SELECT * FROM warehouse_products WHERE id_warehouse = $1",
       [idWarehouse]
     );
 
     return result.rows;
   }
 
+  // Get all products for a SINGLE warehouse by id and calculate each product Size in warehouse
   static async allForWarehouseFullSizes(idWarehouse: string) {
     const result = await pgClient.query(
-      `select p."name", wp.amount, (p."size" * wp.amount) as  full_size, is_hazardous  from warehouse_products wp
-      inner join products p
-      on wp.id_product = p.id 
-      where wp.id_warehouse = $1`,
+      `SELECT p."name", wp.amount, (p."size" * wp.amount) as  full_size, is_hazardous FROM warehouse_products wp
+      INNER JOIN products p
+      ON wp.id_product = p.id 
+      WHERE wp.id_warehouse = $1`,
       [idWarehouse]
     );
 
     return result.rows;
   }
 
+  // Inser a new product to warehouse 
+  // if already existing
+  // Increase amount
   static async addAmount(
     idWarehouse: string,
     idProduct: string,

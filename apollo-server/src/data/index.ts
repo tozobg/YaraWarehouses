@@ -1,6 +1,6 @@
 const { Pool } = require("pg");
 
-// Yara PG Client
+// Yara PG Client Connection string
 const pgConString = {
   user: "postgres",
   password: "postgres",

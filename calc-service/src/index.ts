@@ -15,12 +15,12 @@ type CalcRequest = {
   warehouseProductsSizes: WarehouseProductSizeEntity[];
 };
 
-// CalcOne endpoint
+// checkAvailability endpoint
 app.post("/checkAvailability", (req: Request, res: Response) => {
   const { warehouse, product, amount, warehouseProductsSizes }: CalcRequest =
     req.body;
 
-  // Calculate size taken by ALL products
+  // Calculate (sum) size taken by ALL products
   const takenSize = warehouseProductsSizes.reduce(
     (total, product) => total + product.full_size,
     0

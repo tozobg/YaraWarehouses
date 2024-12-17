@@ -1,21 +1,24 @@
 import { pgClient } from "../data";
 
 class Warehouse {
+  // Get all warehouses
   static async all() {
     const result = await pgClient.query("SELECT * FROM warehouses");
 
     return result.rows;
   }
 
+  // Get warehouse by id
   static async getById(id: string) {
     const result = await pgClient.query(
-      "SELECT * FROM warehouses where id=$1",
+      "SELECT * FROM warehouses WHERE id=$1",
       [id]
     );
 
     return result.rows[0];
   }
 
+  // Change warehouse is_hazardous property
   static async changeHazardness(idWarehouse: string, isHazardous: boolean) {
     const result = await pgClient.query(
       `UPDATE warehouses 
@@ -27,9 +30,10 @@ class Warehouse {
     return result.rows[0];
   }
 
+  // Add a warehouse
   static async add({ name, size }: { name: string; size: number }) {
     const result = await pgClient.query(
-      "Insert into warehouses (name, size) values ($1,$2) RETURNING *",
+      "INSERT INTO warehouses (name, size) VALUES ($1,$2) RETURNING *",
       [name, size]
     );
 

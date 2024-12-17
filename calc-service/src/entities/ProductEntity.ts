@@ -1,8 +1,8 @@
 export class ProductEntity {
   id!: string; // UUID
   name!: string;
-  size!: number; // Must be > 0
-  is_hazardous!: boolean | null; // Nullable, default: null
+  size!: number;
+  is_hazardous!: boolean | null; // Nullable
 
   constructor(init: Partial<ProductEntity>) {
     Object.assign(this, init);

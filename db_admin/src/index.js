@@ -4,6 +4,7 @@ const runner = require("node-pg-migrate").default;
 async function runMigrations() {
   const dbName = "yara_assignment";
 
+  // Initial(default) connection string
   const conString = {
     user: "postgres",
     password: "postgres",
@@ -12,6 +13,7 @@ async function runMigrations() {
     database: "postgres",
   };
 
+  // Create yara_assignment database
   let client = new Client(conString);
   try {
     await client.connect();
@@ -20,11 +22,13 @@ async function runMigrations() {
   } catch (e) {}
 
   try {
+    // Change database in connectiong string
     conString.database = dbName;
     client = new Client(conString);
 
     await client.connect();
 
+    // Execute migrations
     const migrateOptions = {
       dbClient: client,
       dir: "./migrations",
@@ -40,6 +44,7 @@ async function runMigrations() {
   await client.end();
 }
 
+// Create DB and Execute migrations
 runMigrations().then(() => {
   process.exit();
 });

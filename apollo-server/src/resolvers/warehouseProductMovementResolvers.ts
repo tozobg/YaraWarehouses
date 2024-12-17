@@ -9,15 +9,18 @@ import { CalcService } from "../services";
 
 const warehouseProductMovementResolvers = {
   Query: {
+    // Get all warehouses and products movements
     warehousesProductsMovements: async () => {
       return await WarehouseProductMovement.all();
     },
+    // Get all products movement for a warehouse by id
     warehouseProductsMovements: async (
       _: any,
       { idWarehouse }: { idWarehouse: string }
     ) => {
       return await WarehouseProductMovement.allForWarehouseId(idWarehouse);
     },
+    // Get a specific product movement by id
     warehouseProductMovement: async (
       _: any,
       { idMovement }: { idMovement: string }
@@ -26,6 +29,7 @@ const warehouseProductMovementResolvers = {
     },
   },
   Mutation: {
+    // Import a product to a warehouse
     importProduct: async (
       _: any,
       {
@@ -40,13 +44,11 @@ const warehouseProductMovementResolvers = {
         date: string;
       }
     ) => {
-      // get warehouse
+      // Get the product and warehouse
       const warehouse = await Warehouse.getById(idWarehouse);
-
-      // get product
       const product = await Product.getById(idProduct);
 
-      // Check hazardous can be imported
+      // Check hazardous buizines rule
       if (
         warehouse.is_hazardous != null &&
         warehouse.is_hazardous != product.is_hazardous
@@ -56,8 +58,8 @@ const warehouseProductMovementResolvers = {
           "BUSINESS_RULE_VIOLATION"
         );
       }
-      // Check is future:
-      //// if yes, onlyt import (no current products change)
+
+      // Check is future importt (just create a movement without reflecting current stock):
       if (
         new Date(date).setHours(0, 0, 0, 0) >
         new Date(Date.now()).setHours(0, 0, 0, 0)
@@ -71,9 +73,11 @@ const warehouseProductMovementResolvers = {
         });
       }
 
+      // Calculate all product sizes in warehouse
       const warehouseProductsSizes =
         await WarehouseProduct.allForWarehouseFullSizes(idWarehouse);
 
+      // Call 3rd party API for availability check of size
       const availability = await CalcService.checkAvailability({
         warehouse: warehouse,
         product: product,
@@ -81,10 +85,10 @@ const warehouseProductMovementResolvers = {
         warehouseProductsSizes: warehouseProductsSizes,
       });
 
+      // Add product amount, Change warehouse hazardness, Add product movement import
       if (availability) {
         await WarehouseProduct.addAmount(idWarehouse, idProduct, amount);
 
-        // change warehouse hazardnes
         await Warehouse.changeHazardness(idWarehouse, product.is_hazardous);
 
         return await WarehouseProductMovement.import({
@@ -100,10 +104,6 @@ const warehouseProductMovementResolvers = {
           "BUSINESS_RULE_VIOLATION"
         );
       }
-
-      //// if no, check free space
-      //   await warehouseProductMovement.import({ name, size, isHazardous });
-      //   await warehouseProduct.import({ name, size, isHazardous });
     },
   },
 };
